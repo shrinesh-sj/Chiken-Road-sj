@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Chicken Road</title>
+<style>
+body {
+  background:#222;
+  color:white;
+  text-align:center;
+  font-family:Arial;
+}
+canvas {
+  background:gray;
+  display:block;
+  margin:auto;
+}
+</style>
+</head>
+<body>
+
+<h1>🐔 Chicken Road</h1>
+<p>Tap left or right</p>
+
+<canvas id="game" width="400" height="600"></canvas>
+<p id="score">Score: 0</p>
+
+<script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+
+let chicken = {x:180, y:520, s:30};
+let cars = [];
+let score = 0;
+let over = false;
+
+setInterval(()=>{
+  cars.push({x:Math.random()*350, y:-40, w:50, h:30});
+},1200);
+
+function draw(){
+  if(over){
+    ctx.fillStyle="black";
+    ctx.fillRect(0,0,400,600);
+    ctx.fillStyle="white";
+    ctx.font="30px Arial";
+    ctx.fillText("GAME OVER",100,300);
+    return;
+  }
+
+  ctx.clearRect(0,0,400,600);
+
+  ctx.fillStyle="yellow";
+  ctx.fillRect(chicken.x,chicken.y,chicken.s,chicken.s);
+
+  ctx.fillStyle="red";
+  cars.forEach(c=>{
+    c.y+=3;
+    ctx.fillRect(c.x,c.y,c.w,c.h);
+    if(
+      chicken.x < c.x+c.w &&
+      chicken.x+chicken.s > c.x &&
+      chicken.y < c.y+c.h &&
+      chicken.y+chicken.s > c.y
+    ) over=true;
+  });
+
+  score++;
+  document.getElementById("score").innerText="Score: "+score;
+  requestAnimationFrame(draw);
+}
+
+document.addEventListener("keydown",e=>{
+  if(e.key=="ArrowLeft") chicken.x-=30;
+  if(e.key=="ArrowRight") chicken.x+=30;
+});
+
+canvas.onclick=e=>{
+  e.offsetX<200 ? chicken.x-=30 : chicken.x+=30;
+};
+
+draw();
+</script>
+
+</body>
+</html>
