@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Chicken Road Game</title>
+<style>
+    body {
+        text-align: center;
+        font-family: Arial, sans-serif;
+        background: #87ceeb;
+    }
+    canvas {
+        background: #555;
+        display: block;
+        margin: 20px auto;
+        border: 3px solid #000;
+    }
+</style>
+</head>
+<body>
+
+<h1>🐔 Chicken Road Game</h1>
+<p>Press ⬅️ ➡️ to move. Avoid the cars!</p>
+
+<canvas id="game" width="400" height="500"></canvas>
+
+<script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+
+let chicken = { x: 180, y: 450, size: 30 };
+let cars = [];
+let score = 0;
+let gameOver = false;
+
+// Create cars
+function spawnCar() {
+    cars.push({
+        x: Math.random() * 360,
+        y: -40,
+        width: 40,
+        height: 20,
+        speed: 3 + Math.random() * 3
+    });
+}
+
+setInterval(spawnCar, 1000);
+
+// Controls
+document.addEventListener("keydown", e => {
+    if (gameOver) return;
+    if (e.key === "ArrowLeft" && chicken.x > 0) chicken.x -= 20;
+    if (e.key === "ArrowRight" && chicken.x < 370) chicken.x += 20;
+});
+
+// Game loop
+function update() {
